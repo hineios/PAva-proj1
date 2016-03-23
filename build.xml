@@ -13,7 +13,7 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}"/>
+        <javac classpath="javassist.jar" srcdir="${src}" destdir="${build}"/>
     </target>
 
     <target name="jar" depends="compile">

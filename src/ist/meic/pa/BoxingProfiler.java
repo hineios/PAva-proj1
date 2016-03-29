@@ -25,8 +25,8 @@ public class BoxingProfiler {
 				cm.instrument(new ExprEditor() {
 					public void edit(MethodCall m) throws CannotCompileException {
 						String s = cm.getLongName();
-						//System.out.println("Methodname: " + m.getMethodName());
-						//System.out.println("Classname: " + m.getClassName());
+						System.out.println("Methodname: " + m.getMethodName());
+						System.out.println("Classname: " + m.getClassName());
 						/*if (m.getClassName().equals("java.lang.Integer") && m.getMethodName().equals("valueOf")) {
 						
 							m.replace("{System.out.println(\"before\");" + "$_ = $proceed($$);"
@@ -47,13 +47,13 @@ public class BoxingProfiler {
 			
 						}
 						
-						else if (m.getMethodName().equals("byteValue") &&
-								m.getMethodName().equals("shortValue") &&
-								m.getMethodName().equals("intValue") &&
-								m.getMethodName().equals("longValue") &&
-								m.getMethodName().equals("floatValue") &&
-								m.getMethodName().equals("doubleValue") &&
-								m.getMethodName().equals("charValue") &&
+						else if (m.getMethodName().equals("byteValue") ||
+								m.getMethodName().equals("shortValue") ||
+								m.getMethodName().equals("intValue") ||
+								m.getMethodName().equals("longValue") ||
+								m.getMethodName().equals("floatValue") ||
+								m.getMethodName().equals("doubleValue") ||
+								m.getMethodName().equals("charValue") ||
 								m.getMethodName().equals("booleanValue")){
 							
 							sendUnboxMessage(cm, m);

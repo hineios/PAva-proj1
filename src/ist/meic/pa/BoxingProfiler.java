@@ -19,16 +19,46 @@ public class BoxingProfiler {
 			ClassPool pool = ClassPool.getDefault();
 			CtClass ctClass = pool.get(args[0]);
 			CtMethod[] methods = ctClass.getDeclaredMethods();
-			System.out.println("Got " + methods.length + " mothods.");
+			System.out.println("Got " + methods.length + " methods.");
 
 			for (CtMethod cm : methods) {
 				cm.instrument(new ExprEditor() {
 					public void edit(MethodCall m) throws CannotCompileException {
-						System.out.println(m.getMethodName());
-						if (m.getClassName().equals("java.lang.Integer") && m.getMethodName().equals("valueOf")) {
+						String s = cm.getLongName();
+						//System.out.println("Methodname: " + m.getMethodName());
+						//System.out.println("Classname: " + m.getClassName());
+						/*if (m.getClassName().equals("java.lang.Integer") && m.getMethodName().equals("valueOf")) {
+						
 							m.replace("{System.out.println(\"before\");" + "$_ = $proceed($$);"
 									+ "System.out.println(\"after\");}");
+						}*/
+						
+						if (m.getMethodName().equals("valueOf") &&
+								(m.getClassName().equals("java.lang.Byte") ||
+								m.getClassName().equals("java.lang.Short") ||
+								m.getClassName().equals("java.lang.Integer") ||
+								m.getClassName().equals("java.lang.Long") ||
+								m.getClassName().equals("java.lang.Float") ||
+								m.getClassName().equals("java.lang.Double") ||
+								m.getClassName().equals("java.lang.Character") ||
+								m.getClassName().equals("java.lang.Boolean"))) {
+						
+							sendBoxMessage(cm, m);
+			
 						}
+						
+						else if (m.getMethodName().equals("byteValue") &&
+								m.getMethodName().equals("shortValue") &&
+								m.getMethodName().equals("intValue") &&
+								m.getMethodName().equals("longValue") &&
+								m.getMethodName().equals("floatValue") &&
+								m.getMethodName().equals("doubleValue") &&
+								m.getMethodName().equals("charValue") &&
+								m.getMethodName().equals("booleanValue")){
+							
+							sendUnboxMessage(cm, m);
+						}
+								
 					}
 				});
 			}
@@ -40,6 +70,18 @@ public class BoxingProfiler {
 			System.err.println("Transfer control");
 			main.invoke(null, new Object[] { restArgs });
 		}
+	}
+	
+	static void sendUnboxMessage(CtMethod cm, MethodCall m){
+		
+		System.err.println(cm.getLongName() + " unboxed a " + m.getClassName());
+		
+	}
+	
+	static void sendBoxMessage(CtMethod cm, MethodCall m){
+		
+		System.err.println(cm.getLongName() + " boxed a " + m.getClassName());
+		
 	}
 
 	/*static void profiler(CtClass ctClass, CtMethod ctMethod) throws CannotCompileException {
